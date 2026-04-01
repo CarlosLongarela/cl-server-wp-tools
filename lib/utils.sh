@@ -3,7 +3,9 @@
 # CL WP Sentinel - Common utilities
 # =============================================================================
 
-readonly WP_SENTINEL_VERSION="1.0.0"
+if [[ -z "${WP_SENTINEL_VERSION+x}" ]]; then
+    readonly WP_SENTINEL_VERSION="1.0.0"
+fi
 
 # Directories (can be overridden before sourcing)
 DATA_DIR="${DATA_DIR:-/var/lib/cl-wp-sentinel}"

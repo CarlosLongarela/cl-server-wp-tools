@@ -475,7 +475,8 @@ create_initial_baselines() {
         # shellcheck source=/dev/null
         source "${site_config}"
 
-        local watched="${WATCHED_FILES[*]:-wp-config.php .htaccess}"
+        local watched="${WATCHED_FILES[*]+${WATCHED_FILES[*]}}"
+        watched="${watched:-wp-config.php .htaccess}"
         update_all_baselines \
             "${SITE_NAME}" \
             "${SITE_PATH}" \
