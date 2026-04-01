@@ -99,7 +99,7 @@ for site_config in "${SITES_DIR}"/*.conf; do
     [[ -f "${site_config}" ]] || continue
 
     # Reset site vars to avoid leaking between sites
-    unset SITE_NAME SITE_PATH SITE_DOMAIN EXCLUDED_DIRS
+    unset SITE_NAME SITE_PATH SITE_DOMAIN EXCLUDED_DIRS PHP_UPLOADS_IGNORE
     WATCHED_FILES=()
 
     # shellcheck source=/dev/null

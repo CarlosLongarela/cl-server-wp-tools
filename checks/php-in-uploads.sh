@@ -20,6 +20,19 @@ if [[ -z "${_PHP_EXTENSIONS+x}" ]]; then
     readonly _PHP_EXTENSIONS=("php" "php3" "php4" "php5" "php7" "phtml" "phar" "shtml")
 fi
 
+# Default ignore patterns (paths relative to SITE_PATH, wildcards allowed).
+# Override per-site via PHP_UPLOADS_IGNORE=(...) in the site's .conf file.
+# Set PHP_UPLOADS_IGNORE=() in the .conf to disable all exclusions.
+if [[ -z "${_DEFAULT_PHP_UPLOADS_IGNORE+x}" ]]; then
+    readonly _DEFAULT_PHP_UPLOADS_IGNORE=(
+        "wp-content/uploads/cache/wpml/twig/*"
+        "wp-content/uploads/wpallimport/*"
+        "wp-content/uploads/wpallexport/*"
+        "wp-content/uploads/code-profiler-pro/log.php"
+        "wp-content/uploads/redux/index.php"
+    )
+fi
+
 run_php_in_uploads_check() {
     local site_name="$1"
     local site_path="$2"
@@ -42,8 +55,22 @@ run_php_in_uploads_check() {
         find_args+=(-iname "*.${ext}")
     done
 
+    # Build -not -path exclusions.
+    # Use PHP_UPLOADS_IGNORE from site config if defined; otherwise use defaults.
+    local -a ignore_args=()
+    local -a effective_ignore=()
+    if [[ -n "${PHP_UPLOADS_IGNORE+x}" ]]; then
+        effective_ignore=("${PHP_UPLOADS_IGNORE[@]+${PHP_UPLOADS_IGNORE[@]}}")
+    else
+        effective_ignore=("${_DEFAULT_PHP_UPLOADS_IGNORE[@]}")
+    fi
+    for pat in "${effective_ignore[@]+${effective_ignore[@]}}"; do
+        ignore_args+=(-not -path "${site_path}/${pat}")
+    done
+
     local found_files
-    found_files=$(find "${uploads_dir}" -type f \( "${find_args[@]}" \) 2>/dev/null | sort)
+    found_files=$(find "${uploads_dir}" -type f \( "${find_args[@]}" \) \
+        "${ignore_args[@]+${ignore_args[@]}}" 2>/dev/null | sort)
 
     if [[ -z "${found_files}" ]]; then
         log INFO "PHP-in-uploads check PASSED for '${site_name}'"

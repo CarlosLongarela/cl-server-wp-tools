@@ -523,6 +523,27 @@ EXCLUDED_DIRS="${excluded_dirs}"
 # Files watched for content and timestamp changes (relative to WP root).
 # Alert fires if SHA-256 checksum or mtime changes.
 WATCHED_FILES=(${watched_files})
+
+# ─── PHP-in-uploads ignore patterns ──────────────────────────────────────────
+# Paths (relative to SITE_PATH) to skip when scanning for PHP files in uploads.
+# Wildcards (*) are supported. When unset, built-in defaults apply (see below).
+# Set PHP_UPLOADS_IGNORE=() to disable all exclusions.
+#
+# Built-in defaults (active when this block is commented out):
+#   wp-content/uploads/cache/wpml/twig/*
+#   wp-content/uploads/wpallimport/*
+#   wp-content/uploads/wpallexport/*
+#   wp-content/uploads/code-profiler-pro/log.php
+#   wp-content/uploads/redux/index.php
+#
+# Uncomment and edit to override for this site:
+# PHP_UPLOADS_IGNORE=(
+#     "wp-content/uploads/cache/wpml/twig/*"
+#     "wp-content/uploads/wpallimport/*"
+#     "wp-content/uploads/wpallexport/*"
+#     "wp-content/uploads/code-profiler-pro/log.php"
+#     "wp-content/uploads/redux/index.php"
+# )
 EOF
 
     ok "Site config: ${conf_file}"

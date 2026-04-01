@@ -11,7 +11,7 @@ WordPress security monitor for Linux servers. Runs periodic checks via cron and 
 | **New files** | Detects files added to the WP root or `wp-content/` that weren't there at baseline |
 | **Watched files** | SHA-256 checksum + mtime monitoring of critical files (`wp-config.php`, `.htaccess`, etc.) |
 | **Admin users** | Alerts if new administrator accounts appear since the baseline snapshot |
-| **PHP in uploads** | Detects `.php`, `.phar`, `.phtml`, etc. inside `wp-content/uploads/` — no baseline needed, zero false positives |
+| **PHP in uploads** | Detects `.php`, `.phar`, `.phtml`, etc. inside `wp-content/uploads/` — no baseline needed; configurable per-site ignore list with sensible defaults |
 | **Active plugins/theme** | Alerts if a plugin is activated or the active theme changes since baseline |
 
 Alerts are sent via **Telegram** with deduplication (same alert will not repeat within a configurable window).
@@ -277,6 +277,27 @@ WATCHED_FILES=(
     wp-login.php
     index.php
 )
+
+# Paths inside wp-content/uploads/ to SKIP in the PHP-in-uploads scan.
+# Wildcards (*) are supported. When this variable is NOT defined in the
+# site config, the following built-in defaults are used automatically:
+#   wp-content/uploads/cache/wpml/twig/*
+#   wp-content/uploads/wpallimport/*
+#   wp-content/uploads/wpallexport/*
+#   wp-content/uploads/code-profiler-pro/log.php
+#   wp-content/uploads/redux/index.php
+#
+# Override for this site (uncomment and edit):
+# PHP_UPLOADS_IGNORE=(
+#     "wp-content/uploads/cache/wpml/twig/*"
+#     "wp-content/uploads/wpallimport/*"
+#     "wp-content/uploads/wpallexport/*"
+#     "wp-content/uploads/code-profiler-pro/log.php"
+#     "wp-content/uploads/redux/index.php"
+# )
+#
+# To disable all exclusions (flag every PHP file in uploads):
+# PHP_UPLOADS_IGNORE=()
 ```
 
 See [`config/site.example.conf`](config/site.example.conf) for a fully commented template.
