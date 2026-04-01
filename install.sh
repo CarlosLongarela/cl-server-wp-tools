@@ -409,6 +409,11 @@ write_global_config() {
 
     mkdir -p "${CONFIG_DIR}"
 
+    # Use single-quoted values in the generated file so that any character
+    # in the token/path (double quotes, backticks, $, etc.) cannot break
+    # the bash syntax when config.sh is sourced later.
+    # The heredoc itself (unquoted << EOF) still expands variables here so
+    # the actual values are written to the file.
     cat > "${CONFIG_DIR}/config.sh" << EOF
 # CL WP Sentinel - Global Configuration
 # Generated: $(date)
@@ -416,21 +421,21 @@ write_global_config() {
 # SECURITY: This file contains your Telegram token. Keep permissions at 600.
 
 # ─── Telegram ─────────────────────────────────────────────────────────────────
-TELEGRAM_BOT_TOKEN="${TELEGRAM_BOT_TOKEN}"
-TELEGRAM_CHAT_ID="${TELEGRAM_CHAT_ID}"
+TELEGRAM_BOT_TOKEN='${TELEGRAM_BOT_TOKEN}'
+TELEGRAM_CHAT_ID='${TELEGRAM_CHAT_ID}'
 
 # ─── Alert deduplication ──────────────────────────────────────────────────────
 # Same alert will not be re-sent within this many hours.
-ALERT_DEDUP_HOURS="${ALERT_DEDUP_HOURS:-24}"
+ALERT_DEDUP_HOURS='${ALERT_DEDUP_HOURS:-24}'
 
 # ─── Logging ──────────────────────────────────────────────────────────────────
-LOG_RETENTION_DAYS="${LOG_RETENTION_DAYS:-30}"
-LOG_DIR="${LOG_DIR}"
+LOG_RETENTION_DAYS='${LOG_RETENTION_DAYS:-30}'
+LOG_DIR='${LOG_DIR}'
 
 # ─── Paths ────────────────────────────────────────────────────────────────────
-DATA_DIR="${DATA_DIR}"
-WP_CLI="${WP_CLI_PATH:-/usr/local/bin/wp}"
-INSTALL_DIR="${INSTALL_DIR}"
+DATA_DIR='${DATA_DIR}'
+WP_CLI='${WP_CLI_PATH:-/usr/local/bin/wp}'
+INSTALL_DIR='${INSTALL_DIR}'
 EOF
 
     chmod 600 "${CONFIG_DIR}/config.sh"

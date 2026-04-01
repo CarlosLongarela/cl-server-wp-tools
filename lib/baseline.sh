@@ -104,7 +104,7 @@ create_active_plugins_baseline() {
         log WARN "WP-CLI could not list plugins for '${site_name}': ${plugins}"
         : > "${plugins_file}"
     else
-        echo "${plugins}" | sort | grep -v '^$' > "${plugins_file}"
+        echo "${plugins}" | sort | grep -v '^\s*$' > "${plugins_file}"
         local count; count=$(wc -l < "${plugins_file}")
         log INFO "Active-plugins baseline ready: ${count} active plugin(s) for '${site_name}'"
     fi
@@ -155,7 +155,7 @@ create_admin_baseline() {
     fi
 
     # Sort and strip blank lines for reliable comm(1) comparison later
-    echo "${admins}" | sort | grep -v '^$' > "${baseline_file}"
+    echo "${admins}" | sort | grep -v '^\s*$' > "${baseline_file}"
 
     local count; count=$(wc -l < "${baseline_file}")
     log INFO "Admin-users baseline ready: ${count} administrator(s) tracked for '${site_name}'"

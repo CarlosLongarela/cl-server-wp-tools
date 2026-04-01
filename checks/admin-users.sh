@@ -42,7 +42,7 @@ run_admin_users_check() {
 
     # Sort and strip any blank lines
     local tmp_current; tmp_current=$(mktemp)
-    echo "${current_admins}" | sort | grep -v '^$' > "${tmp_current}"
+    echo "${current_admins}" | sort | grep -v '^\s*$' > "${tmp_current}"
 
     local current_count; current_count=$(wc -l < "${tmp_current}")
     local baseline_count; baseline_count=$(wc -l < "${baseline_file}")
