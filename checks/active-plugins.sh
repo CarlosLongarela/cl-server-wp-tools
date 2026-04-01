@@ -47,7 +47,8 @@ run_active_plugins_check() {
     fi
 
     local tmp_plugins; tmp_plugins=$(mktemp)
-    trap 'rm -f "${tmp_plugins}"' RETURN
+    # shellcheck disable=SC2064
+    trap "rm -f '${tmp_plugins}'; trap - RETURN" RETURN
     echo "${current_plugins}" | sort | grep -v '^\s*$' > "${tmp_plugins}"
 
     # Newly activated = in current but not in baseline

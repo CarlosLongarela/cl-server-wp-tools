@@ -29,7 +29,8 @@ run_new_files_check() {
 
     # ── Build current file list ──────────────────────────────────────────────
     local tmp_current; tmp_current=$(mktemp)
-    trap 'rm -f "${tmp_current}"' RETURN
+    # shellcheck disable=SC2064
+    trap "rm -f '${tmp_current}'; trap - RETURN" RETURN
 
     # WP root — depth 1
     find "${site_path}" -maxdepth 1 -type f >> "${tmp_current}"

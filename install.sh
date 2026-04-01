@@ -41,7 +41,7 @@ BLUE='\033[0;34m'; BOLD='\033[1m'; RESET='\033[0m'
 print_banner() {
     echo -e "${BOLD}${BLUE}"
     echo "  ╔══════════════════════════════════════════╗"
-    echo "  ║       CL WP Sentinel  v1.0.0            ║"
+    echo "  ║       CL WP Sentinel  v1.0.0             ║"
     echo "  ║    WordPress Security Monitor & Alert    ║"
     echo "  ╚══════════════════════════════════════════╝"
     echo -e "${RESET}"

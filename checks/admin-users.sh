@@ -42,7 +42,8 @@ run_admin_users_check() {
 
     # Sort and strip any blank lines
     local tmp_current; tmp_current=$(mktemp)
-    trap 'rm -f "${tmp_current}"' RETURN
+    # shellcheck disable=SC2064
+    trap "rm -f '${tmp_current}'; trap - RETURN" RETURN
     echo "${current_admins}" | sort | grep -v '^\s*$' > "${tmp_current}"
 
     local current_count; current_count=$(wc -l < "${tmp_current}")

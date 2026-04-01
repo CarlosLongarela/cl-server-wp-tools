@@ -22,8 +22,12 @@ create_file_baseline() {
     log INFO "Creating file baseline for '${site_name}'..."
 
     local tmp; tmp=$(mktemp)
-    # Guarantee cleanup even on early exit or error
-    trap 'rm -f "${tmp}"' RETURN
+    # Guarantee cleanup even on early exit or error.
+    # Double-quotes expand ${tmp} NOW (at trap-set time) so the literal path is
+    # embedded in the trap string. 'trap - RETURN' inside the handler resets the
+    # trap after it fires, preventing it from leaking to the caller under set -u.
+    # shellcheck disable=SC2064
+    trap "rm -f '${tmp}'; trap - RETURN" RETURN
 
     # 1) WP root — files only, depth 1
     find "${site_path}" -maxdepth 1 -type f >> "${tmp}"
