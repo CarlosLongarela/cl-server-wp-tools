@@ -100,7 +100,7 @@ for site_config in "${SITES_DIR}"/*.conf; do
 
         if (( NOTIFY == 1 )); then
             send_telegram "🔄 <b>CL WP Sentinel — Baseline Updated</b>
-📍 <b>Host:</b> $(escape_html "$(get_hostname)")
+📍 <b>Host:</b> $(escape_html "$(get_alert_host)")
 🌐 <b>Site:</b> $(escape_html "${SITE_NAME}")
 📅 <b>Time:</b> $(date '+%Y-%m-%d %H:%M:%S')
 
@@ -112,7 +112,7 @@ Alert history cleared. Fresh monitoring is now active."
         log ERROR "Baseline update had errors for '${SITE_NAME}' — check log for details"
         if (( NOTIFY == 1 )); then
             send_telegram "⚠️ <b>CL WP Sentinel — Baseline Update Warning</b>
-📍 <b>Host:</b> $(escape_html "$(get_hostname)")
+📍 <b>Host:</b> $(escape_html "$(get_alert_host)")
 🌐 <b>Site:</b> $(escape_html "${SITE_NAME}")
 📅 <b>Time:</b> $(date '+%Y-%m-%d %H:%M:%S')
 

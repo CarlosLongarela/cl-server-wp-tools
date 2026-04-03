@@ -46,11 +46,12 @@ send_alert() {
     local check_type="$2"
     local severity="${3:-WARNING}"
     local detail="$4"
+    local alert_host; alert_host="$(get_alert_host)"
 
     # Compute dedup key from content (ignoring timestamps)
     local alert_hash
     alert_hash=$(printf '%s|%s|%s|%s' \
-        "$(get_hostname)" "${site_name}" "${check_type}" "${detail}" \
+        "${alert_host}" "${site_name}" "${check_type}" "${detail}" \
         | sha256sum | cut -d' ' -f1)
 
     local site_state_dir="${STATE_DIR}/${site_name}"
@@ -81,7 +82,7 @@ send_alert() {
     local escaped_detail; escaped_detail=$(escape_html "${detail}")
     local message
     message="${icon} <b>CL WP Sentinel Alert</b>
-📍 <b>Host:</b> $(escape_html "$(get_hostname)")
+📍 <b>Host:</b> $(escape_html "${alert_host}")
 🌐 <b>Site:</b> $(escape_html "${site_name}")
 🔍 <b>Check:</b> $(escape_html "${check_type}")
 🔴 <b>Severity:</b> ${severity}
@@ -113,6 +114,7 @@ send_recovery() {
     local site_name="$1"
     local check_type="$2"
     local detail="${3:-All checks passed}"
+    local alert_host; alert_host="$(get_alert_host)"
 
     if [[ "${DRY_RUN:-0}" == "1" ]]; then
         log INFO "[DRY-RUN] Recovery notification: ${check_type} / ${site_name}"
@@ -122,7 +124,7 @@ send_recovery() {
     local escaped_detail; escaped_detail=$(escape_html "${detail}")
     local message
     message="✅ <b>CL WP Sentinel — Resolved</b>
-📍 <b>Host:</b> $(escape_html "$(get_hostname)")
+📍 <b>Host:</b> $(escape_html "${alert_host}")
 🌐 <b>Site:</b> $(escape_html "${site_name}")
 🔍 <b>Check:</b> $(escape_html "${check_type}")
 📅 <b>Time:</b> $(date '+%Y-%m-%d %H:%M:%S')

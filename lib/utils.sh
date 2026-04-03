@@ -143,6 +143,25 @@ get_hostname() {
     hostname -f 2>/dev/null || hostname
 }
 
+# ─── Alert host label (site-aware) ───────────────────────────────────────────
+# For per-site notifications, prefer SITE_DOMAIN when available.
+get_alert_host() {
+    if [[ -n "${SITE_DOMAIN:-}" ]]; then
+        echo "${SITE_DOMAIN}"
+        return 0
+    fi
+
+    local host
+    host="$(get_hostname 2>/dev/null || true)"
+    if [[ -n "${host}" ]] && [[ "${host}" != "localhost" ]] && [[ "${host}" != "localhost.localdomain" ]]; then
+        echo "${host}"
+        return 0
+    fi
+
+    host="$(hostname -I 2>/dev/null | awk '{print $1}' || true)"
+    echo "${host:-localhost}"
+}
+
 # ─── Prerequisites check ──────────────────────────────────────────────────────
 check_prerequisites() {
     local missing=()
