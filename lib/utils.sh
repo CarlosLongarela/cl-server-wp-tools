@@ -4,7 +4,7 @@
 # =============================================================================
 
 if [[ -z "${WP_SENTINEL_VERSION+x}" ]]; then
-    readonly WP_SENTINEL_VERSION="1.0.0"
+    readonly WP_SENTINEL_VERSION="1.2"
 fi
 
 # Directories (can be overridden before sourcing)

@@ -3,7 +3,7 @@
 # CL WP Sentinel - Run all security checks across all configured sites
 #
 # Usage:
-#   run-all.sh [options]
+#   cl-wp-sentinel [options]
 #
 # Options:
 #   --dry-run           Print what would be sent without sending Telegram alerts

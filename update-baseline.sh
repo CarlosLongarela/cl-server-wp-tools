@@ -11,7 +11,7 @@
 # cleared so that new issues can generate fresh alerts.
 #
 # Usage:
-#   update-baseline.sh [options]
+#   cl-wp-sentinel-update-baseline [options]
 #
 # Options:
 #   --site=NAME       Update only the specified site (default: all sites)
