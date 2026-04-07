@@ -21,7 +21,7 @@ run_new_files_check() {
     local baseline_file="${DATA_DIR}/${site_name}/files.baseline"
 
     if [[ ! -f "${baseline_file}" ]]; then
-        log ERROR "[new-files] No baseline found for '${site_name}'. Run cl-wp-sentinel-update-baseline first."
+        log ERROR "[new-files] No baseline found for '${site_name}'. Run cl-wp-sentinel-update-baseline --site=${site_name} first."
         return 1
     fi
 
