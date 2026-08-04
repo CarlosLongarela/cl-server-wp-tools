@@ -278,6 +278,11 @@ WATCHED_FILES=(
     index.php
 )
 
+# Optional checks (default: disabled). Set to "yes" to enable per site.
+# Core integrity and watched-files integrity are always active.
+# ENABLE_NEW_FILES_CHECKS="no"   # Detect new files in WP root / wp-content
+# ENABLE_PLUGINS_CHECK="no"      # Verify plugin checksums via wp plugin verify-checksums
+
 # Plugin slugs to SKIP when running wp plugin verify-checksums.
 # Use this for premium, private, or custom plugins not hosted in WordPress.org.
 # WP-CLI returns HTTP 404 for their checksums, generating false-positive warnings.

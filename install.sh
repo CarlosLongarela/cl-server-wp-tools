@@ -546,6 +546,27 @@ configure_site() {
 SKIP_BLOCK
         fi
 
+        # Append optional-check flags (ENABLE_NEW_FILES_CHECKS, ENABLE_PLUGINS_CHECK)
+        # if they were not already present. They default to "no" so behaviour
+        # stays opt-in unless the site owner explicitly enables each check.
+        if ! grep -qE 'ENABLE_NEW_FILES_CHECKS|ENABLE_PLUGINS_CHECK' "${conf_file}"; then
+            cat >> "${conf_file}" << 'OPTIONAL_BLOCK'
+
+# ─── Optional checks (default: disabled) ─────────────────────────────────────
+# Set a flag to "yes" to enable the corresponding check for this site.
+# The checks can always be run on demand regardless of these settings
+# (e.g. `cl-wp-sentinel --check=files` or `--check=plugins`).
+#
+#   ENABLE_NEW_FILES_CHECKS — detect new files in WP root / wp-content
+#   ENABLE_PLUGINS_CHECK    — verify plugin integrity via wp plugin verify-checksums
+#
+# Core integrity (wp core verify-checksums) and watched-files integrity
+# remain active at all times and cannot be disabled.
+ENABLE_NEW_FILES_CHECKS="no"
+ENABLE_PLUGINS_CHECK="no"
+OPTIONAL_BLOCK
+        fi
+
         ok "Site config updated: ${conf_file}"
     else
         # ── Fresh install — write the full config from template ───────────────
@@ -569,6 +590,19 @@ EXCLUDED_DIRS="${excluded_dirs}"
 # Files watched for content and timestamp changes (relative to WP root).
 # Alert fires if SHA-256 checksum or mtime changes.
 WATCHED_FILES=(${watched_files})
+
+# ─── Optional checks (default: disabled) ─────────────────────────────────────
+# Set a flag to "yes" to enable the corresponding check for this site.
+# The checks can always be run on demand regardless of these settings
+# (e.g. `cl-wp-sentinel --check=files` or `--check=plugins`).
+#
+#   ENABLE_NEW_FILES_CHECKS — detect new files in WP root / wp-content
+#   ENABLE_PLUGINS_CHECK    — verify plugin integrity via wp plugin verify-checksums
+#
+# Core integrity (wp core verify-checksums) and watched-files integrity
+# remain active at all times and cannot be disabled.
+ENABLE_NEW_FILES_CHECKS="no"
+ENABLE_PLUGINS_CHECK="no"
 
 # ─── Plugin checksum verification ────────────────────────────────────────────
 # Plugin slugs to SKIP when running wp plugin verify-checksums.

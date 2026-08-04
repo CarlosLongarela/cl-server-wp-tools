@@ -74,6 +74,7 @@ for site_config in "${SITES_DIR}"/*.conf; do
     [[ -f "${site_config}" ]] || continue
 
     unset SITE_NAME SITE_PATH SITE_DOMAIN EXCLUDED_DIRS PHP_UPLOADS_IGNORE
+    unset ENABLE_NEW_FILES_CHECKS ENABLE_PLUGINS_CHECK
     WATCHED_FILES=()
 
     # shellcheck source=/dev/null

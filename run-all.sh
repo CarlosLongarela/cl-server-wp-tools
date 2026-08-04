@@ -100,6 +100,7 @@ for site_config in "${SITES_DIR}"/*.conf; do
 
     # Reset site vars to avoid leaking between sites
     unset SITE_NAME SITE_PATH SITE_DOMAIN EXCLUDED_DIRS PHP_UPLOADS_IGNORE
+    unset ENABLE_NEW_FILES_CHECKS ENABLE_PLUGINS_CHECK
     WATCHED_FILES=()
     VERIFY_CHECKSUMS_SKIP=()
 
@@ -128,11 +129,19 @@ for site_config in "${SITES_DIR}"/*.conf; do
     fi
 
     if [[ -z "${SPECIFIC_CHECK}" || "${SPECIFIC_CHECK}" == "plugins" ]]; then
-        run_plugins_check "${SITE_NAME}" "${SITE_PATH}"            || SITE_EXIT=1
+        if [[ "${ENABLE_PLUGINS_CHECK:-no}" == "yes" ]]; then
+            run_plugins_check "${SITE_NAME}" "${SITE_PATH}"            || SITE_EXIT=1
+        else
+            log INFO "[plugins] Skipped for '${SITE_NAME}' (ENABLE_PLUGINS_CHECK=no)"
+        fi
     fi
 
     if [[ -z "${SPECIFIC_CHECK}" || "${SPECIFIC_CHECK}" == "files" ]]; then
-        run_new_files_check "${SITE_NAME}" "${SITE_PATH}" "${EXCLUDED}" || SITE_EXIT=1
+        if [[ "${ENABLE_NEW_FILES_CHECKS:-no}" == "yes" ]]; then
+            run_new_files_check "${SITE_NAME}" "${SITE_PATH}" "${EXCLUDED}" || SITE_EXIT=1
+        else
+            log INFO "[files] Skipped for '${SITE_NAME}' (ENABLE_NEW_FILES_CHECKS=no)"
+        fi
     fi
 
     if [[ -z "${SPECIFIC_CHECK}" || "${SPECIFIC_CHECK}" == "watched" ]]; then
